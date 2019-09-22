@@ -1,0 +1,9 @@
+{
+	"Host": "http://192.168.0.1:5000/v3",
+	"Username": "mkahani",
+	"Password": "kirwu4-xYqwit-cizqic",
+	"ProjectID": "e8475c6dc63f4587af4603a23d7bf624",
+	"ProjectName": "Kubernetes",
+	"Container": "",
+	"ImageRegion": "RegionOne"
+}
