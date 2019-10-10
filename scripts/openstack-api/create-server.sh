@@ -39,6 +39,19 @@ COMMENT1
 
 echo "CREATING VMS"
 
+
+#creating kubeadm token
+
+touch start.sh
+token=$(kubeadm token create --print-join-command)
+printf "#! /bin/bash\n\n" >> start.sh
+echo $token >> start.sh
+token=$(base64 start.sh)
+rm start.sh
+token=$(echo "${token}" | tr -d '[:space:]')
+
+
+
 #creating random string to name worker-nodes
 
 random_string=$(sudo head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo '')
@@ -46,5 +59,5 @@ worker_name="worker-""$random_string"
 echo $worker_name
 
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Auth-Project-Id: Kubernetes" -H "$header" -X POST ${NOVA}/servers -d '{"server": {"OS-DCF:diskConfig": "AUTO", "name": "'"$worker_name"'", "imageRef": "3d00ca1a-1bd1-4a24-80df-538d514ae98d", "availability_zone": "nova", "flavorRef": "2", "max_count": 1, "min_count": 1, "key_name": "mohammad",
- "user_data" : "IyEgL2Jpbi9iYXNoCgprdWJlYWRtIGpvaW4gMTAuMTUuMTUuMjM6NjQ0MyAtLXRva2VuIGluZDQxbC5iOTI0aHU2bXl3Z3Z0ZHdmICAgICAtLWRpc2NvdmVyeS10b2tlbi1jYS1jZXJ0LWhhc2ggc2hhMjU2OmRiMTgyNTM4MGNkZGRkNWRiMzhjNGFmOGY0Mzc5YjQwMGFmOGJhYzA1ZmQ1NGMyZmEzMDIwNWJjMGZmODIxMGUK="
+ "user_data" : "'"$token"'"
   , "networks": [{"uuid": "976655bc-34bc-4fc8-a76b-63f21243ae9a"}]}}'
